@@ -1,0 +1,61 @@
+{% extends '::base.html.twig' %}
+
+{% form_theme form 'AppBundle:Article:form_theme.html.twig' %}
+
+{% block body -%}
+    <h1>Article creation</h1>
+
+    {{ form(form) }}
+
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path('article') }}">
+                Back to the list
+            </a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({dateFormat: 'dd/mm/yy'});
+        });
+
+        function reindexCollection(container) {
+                $('#' + container).find('tbody tr td:nth-child(2)').each(function (index, element) {
+                    $(element).html(index + 1);
+                });
+            }
+
+            $('table').delegate('.remove-line', 'click', function (e) {
+                e.preventDefault();
+                var row = $(this).parent().parent();
+                var table = row.parent().parent();
+                row.remove();
+                reindexCollection(table.attr('id'));
+            });
+
+            $('.add-line').click(function (e) {
+                e.preventDefault();
+
+                var table = $(this).closest('table');
+                var maxLimit = table.attr('data-max-limit');
+                var rowCount = table.find('tbody tr').length;
+
+                if (null != maxLimit && rowCount >= maxLimit) {
+                    alert('Vous ne pouvez pas ajouter plus de ' + maxLimit + ' auteurs.');
+                    return;
+                }
+
+                var prototype = table.attr('data-prototype');
+                prototype = prototype.replace(/__name__/g, rowCount);
+                rowCount++;
+
+                // create a new list element and add it to the list
+                table.find('tbody').prepend(prototype);
+                reindexCollection(table.attr('id'));
+            });
+    </script>
+{% endblock %}

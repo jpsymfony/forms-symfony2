@@ -1,0 +1,60 @@
+{% block authors_row %}
+    {% if prototype is defined %}
+        {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
+    {% endif %}
+
+    {% if max_limit is defined %}
+        {%- set attr = attr|merge({'data-max-limit': max_limit }) -%}
+    {% endif %}
+
+    <table {{ block('widget_container_attributes') }}>
+        <thead>
+            <tr>
+                <th>-</th>
+                <th>Num</th>
+                <th>Name</th>
+            </tr>
+            <tr>
+                <td colspan="8">
+                    <a href="#" class="button add-line">Add an author</a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            {{ block('form_rows') }}
+        </tbody>
+    </table>
+
+{% endblock authors_row %}
+
+{% block appbundle_author_row %}
+    <tr>
+        <td>
+            <button type="button" class="close remove-line" aria-label="Remove">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </td>
+        <td>{{ form.vars.name + 1 }}</td>
+        <td>
+            {{ form_errors(form.name) }}
+            {{ form_widget(form.name) }}
+        </td>
+        {{ form_widget(form) }}
+    </tr>
+{% endblock appbundle_author_row %}
+
+{% block files_row %}
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+{% endblock files_row %}
+
+{% block appbundle_file_row %}
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+    {% if form.vars.value.alt is defined and form.vars.value.alt is not null %}
+        <img
+                src="{{ asset(form.vars.value.getWebPath) }}"
+                alt="{{ form.vars.value.alt }}"
+        />
+    {% endif %}
+{% endblock appbundle_file_row %}
